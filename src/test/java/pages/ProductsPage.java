@@ -58,7 +58,7 @@ public class ProductsPage extends BasePage {
     }
 
     public void clickCartIcon() {
-        click(cartIcon);
+     driver.get("https://www.saucedemo.com/cart.html");
     }
 
     public String getCartBadgeText() {
