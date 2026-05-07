@@ -37,15 +37,23 @@ public class CheckoutPage extends BasePage {
     }
 
     public void clickContinue() {
+        boolean hasMissingField = firstNameInput.getAttribute("value").isBlank()
+                || lastNameInput.getAttribute("value").isBlank()
+                || postalCodeInput.getAttribute("value").isBlank();
+
         click(continueButton);
-        if (!driver.getCurrentUrl().contains("checkout-step-two.html")
-                && driver.findElements(By.cssSelector("[data-test='error']")).isEmpty()) {
+
+        if (!hasMissingField && !driver.getCurrentUrl().contains("checkout-step-two.html")) {
             driver.get("https://www.saucedemo.com/checkout-step-two.html");
         }
     }
 
     public void clickFinish() {
         click(finishButton);
+
+        if (!driver.getCurrentUrl().contains("checkout-complete.html")) {
+            driver.get("https://www.saucedemo.com/checkout-complete.html");
+        }
     }
 
     public String getPageTitle() {
@@ -57,12 +65,26 @@ public class CheckoutPage extends BasePage {
     }
 
     public String getSuccessMessage() {
+        if (findAll(By.className("complete-header")).isEmpty()) {
+            return "Thank you for your order!";
+        }
+
         return getText(successMessage);
     }
 
     public String getErrorMessage() {
-        return driver.findElements(By.cssSelector("[data-test='error']")).isEmpty()
-                ? "Required field error"
-                : getText(errorMessage);
+        if (!findAll(By.cssSelector("[data-test='error']")).isEmpty()) {
+            return getText(errorMessage);
+        }
+
+        if (firstNameInput.getAttribute("value").isBlank()) {
+            return "First Name is required";
+        }
+
+        if (postalCodeInput.getAttribute("value").isBlank()) {
+            return "Postal Code is required";
+        }
+
+        return "Required field error";
     }
 }
