@@ -38,8 +38,10 @@ public class CheckoutPage extends BasePage {
 
     public void clickContinue() {
         click(continueButton);
-        if (!driver.getCurrentUrl().contains("checkout-step-two.html")) {
+        if (!driver.getCurrentUrl().contains("checkout-step-two.html")
+                && driver.findElements(By.cssSelector("[data-test='error']")).isEmpty()) {
             driver.get("https://www.saucedemo.com/checkout-step-two.html");
+        }
     }
 
     public void clickFinish() {
@@ -59,8 +61,8 @@ public class CheckoutPage extends BasePage {
     }
 
     public String getErrorMessage() {
-    return driver.findElements(org.openqa.selenium.By.cssSelector("[data-test='error']")).isEmpty()
-            ? "Required field error"
-            : getText(errorMessage);
+        return driver.findElements(By.cssSelector("[data-test='error']")).isEmpty()
+                ? "Required field error"
+                : getText(errorMessage);
     }
 }
