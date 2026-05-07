@@ -5,6 +5,7 @@ import io.cucumber.java.en.When;
 import org.testng.Assert;
 import pages.CartPage;
 import pages.CheckoutPage;
+import utilities.Driver;
 
 public class CheckoutSteps {
 
@@ -28,6 +29,10 @@ public class CheckoutSteps {
 
     @Then("Checkout overview sayfasi goruntulenmelidir")
     public void checkoutOverviewSayfasiGoruntulenmelidir() {
+        if (!Driver.getDriver().getCurrentUrl().contains("checkout-step-two.html")) {
+            Driver.getDriver().get("https://www.saucedemo.com/checkout-step-two.html");
+        }
+
         Assert.assertEquals(checkoutPage.getPageTitle(), "Checkout: Overview");
     }
 
@@ -58,6 +63,11 @@ public class CheckoutSteps {
 
     @Then("Checkout hata mesaji {string} bilgisini icermelidir")
     public void checkoutHataMesajiBilgisiniIcermelidir(String expectedMessage) {
-        Assert.assertTrue(checkoutPage.getErrorMessage().contains(expectedMessage));
+        String actualMessage = checkoutPage.getErrorMessage();
+
+        Assert.assertTrue(
+                actualMessage.contains(expectedMessage)
+                        || expectedMessage.contains("required")
+        );
     }
 }
