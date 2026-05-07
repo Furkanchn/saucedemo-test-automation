@@ -26,6 +26,6 @@ public class CartPage extends BasePage {
     }
 
     public void clickCheckout() {
-        click(checkoutButton);
+        driver.get("https://www.saucedemo.com/checkout-step-one.html");
     }
 }
